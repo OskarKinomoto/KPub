@@ -57,7 +57,7 @@ public class Connection {
 	public static synchronized void makeConnection() throws SQLException {
 		openConnections++;
 		if (openConnections == 1)
-			connection = DriverManager.getConnection("jdbc:mysql://" + getHost() + "/" + getDB(), getName(), getPass());
+			connection = DriverManager.getConnection("jdbc:mysql://" + getHost() + "/" + getDB() + "?useUnicode=yes&characterEncoding=UTF-8", getName(), getPass());
 	}
 
 	/**
