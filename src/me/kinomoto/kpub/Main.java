@@ -9,6 +9,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -68,6 +70,8 @@ public class Main extends JFrame {
 	private JButton issnEditor;
 	private JButton langEditor;
 	private JButton formatEditor;
+	
+	public static ExecutorService es = Executors.newCachedThreadPool();
 
 	/**
 	 * Makes first window and inits everything.
@@ -377,6 +381,15 @@ public class Main extends JFrame {
 	 * @param msg
 	 */
 	public static void error(String msg) {
+		ErrorDialog.error(msg, mainRef);
+	}
+
+	/**
+	 * Opens {@link ErrorDialog}
+	 * 
+	 * @param msg
+	 */
+	public static void conError(String msg) {
 		ErrorDialog.error(msg, mainRef);
 	}
 

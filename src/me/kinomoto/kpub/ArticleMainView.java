@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.sql.SQLException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -135,12 +134,8 @@ public class ArticleMainView extends JPanel {
 			public void stateChanged(ChangeEvent e) {
 				if (changingArticle)
 					return;
-				try {
-					article.setAuthorsCount((int) authorsCount.getValue());
-					updateAuthorsCount();
-				} catch (SQLException e1) {
-					Main.error(e1.getMessage());
-				}
+				article.setAuthorsCount((int) authorsCount.getValue());
+				updateAuthorsCount();
 			}
 		});
 		authorsCount.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
@@ -155,12 +150,8 @@ public class ArticleMainView extends JPanel {
 			public void keyReleased(KeyEvent e) {
 				if (changingArticle)
 					return;
-				try {
-					article.setAuthorsNotFromUnit(authorsNotFromUnitArea.getText());
-					updateAuthorsCount();
-				} catch (SQLException e1) {
-					Main.error(e1.getMessage());
-				}
+				article.setAuthorsNotFromUnit(authorsNotFromUnitArea.getText());
+				updateAuthorsCount();
 			}
 		});
 		authorsNotFromUnitArea.setToolTipText("Comma is separator");
@@ -176,12 +167,8 @@ public class ArticleMainView extends JPanel {
 			public void keyReleased(KeyEvent e) {
 				if (changingArticle)
 					return;
-				try {
-					article.setAuthorsFromUnit(authorsFromUnitArea.getText());
-					updateAuthorsCount();
-				} catch (SQLException e1) {
-					Main.error(e1.getMessage());
-				}
+				article.setAuthorsFromUnit(authorsFromUnitArea.getText());
+				updateAuthorsCount();
 			}
 		});
 		authorsFromUnitArea.setToolTipText("Comma is separator");
@@ -198,12 +185,9 @@ public class ArticleMainView extends JPanel {
 			public void keyReleased(KeyEvent e) {
 				if (changingArticle)
 					return;
-				try {
-					article.setName(nameArea.getText());
-					articles.updateList();
-				} catch (SQLException e1) {
-					Main.error(e1.getMessage());
-				}
+				article.setName(nameArea.getText());
+				articles.updateList();
+
 			}
 		});
 		nameArea.setWrapStyleWord(true);
@@ -234,13 +218,9 @@ public class ArticleMainView extends JPanel {
 					workType.setSelectedItem(lastWorkType);
 					return;
 				}
-				try {
-					article.setWorkType(WORK_TYPE.valueOf(workType.getSelectedItem().toString().toUpperCase()));
-					updateCustomPanel();
-					lastWorkType = workType.getSelectedItem().toString();
-				} catch (SQLException e) {
-					Main.error(e.getMessage());
-				}
+				article.setWorkType(WORK_TYPE.valueOf(workType.getSelectedItem().toString().toUpperCase()));
+				updateCustomPanel();
+				lastWorkType = workType.getSelectedItem().toString();
 
 			}
 		});
@@ -257,8 +237,6 @@ public class ArticleMainView extends JPanel {
 					return;
 				try {
 					article.setLang(LangModel.getLangByNameEN((String) langSelect.getSelectedItem()));
-				} catch (SQLException e) {
-					Main.error(e.getMessage());
 				} catch (NullPointerException e) {
 					// nth to be done
 				}

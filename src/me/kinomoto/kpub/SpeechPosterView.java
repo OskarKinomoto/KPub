@@ -3,7 +3,6 @@ package me.kinomoto.kpub;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.sql.SQLException;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -41,11 +40,7 @@ public class SpeechPosterView extends JPanel {
 		conferenceName.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				try {
-					article.setConferenceName(conferenceName.getText());
-				} catch (SQLException e1) {
-					Main.error(e1.getMessage());
-				}
+				article.setConferenceName(conferenceName.getText());
 			}
 		});
 		conferenceName.setBackground(Color.WHITE);
@@ -58,11 +53,7 @@ public class SpeechPosterView extends JPanel {
 		date.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				try {
-					article.setDate(date.getText());
-				} catch (SQLException e1) {
-					Main.error(e1.getMessage());
-				}
+				article.setDate(date.getText());
 			}
 		});
 		date.setBackground(Color.WHITE);
@@ -75,11 +66,7 @@ public class SpeechPosterView extends JPanel {
 		town.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				try {
-					article.setTown(town.getText());
-				} catch (SQLException e1) {
-					Main.error(e1.getMessage());
-				}
+				article.setTown(town.getText());
 			}
 		});
 		town.setBackground(Color.WHITE);
@@ -92,11 +79,7 @@ public class SpeechPosterView extends JPanel {
 		country.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				try {
-					article.setCountry(country.getText());
-				} catch (SQLException e1) {
-					Main.error(e1.getMessage());
-				}
+				article.setCountry(country.getText());
 			}
 		});
 		country.setBackground(Color.WHITE);

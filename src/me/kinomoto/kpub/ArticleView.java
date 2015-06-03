@@ -6,7 +6,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.sql.SQLException;
 import java.util.Calendar;
 
 import javax.swing.DefaultComboBoxModel;
@@ -95,12 +94,9 @@ public class ArticleView extends JPanel {
 		articleNo.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				try {
-					article.setArticleNo(articleNo.getText());
-				} catch (SQLException e1) {
-					Main.error(e1.getMessage());
-				}
+				article.setArticleNo(articleNo.getText());
 			}
+
 		});
 		articleNo.setBackground(Color.WHITE);
 		add(articleNo, "4, 8, fill, default");
@@ -112,11 +108,7 @@ public class ArticleView extends JPanel {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				try {
-					article.setIssue((int) issue.getValue());
-				} catch (SQLException e1) {
-					Main.error(e1.getMessage());
-				}
+				article.setIssue((int) issue.getValue());
 
 			}
 		});
@@ -139,11 +131,7 @@ public class ArticleView extends JPanel {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				try {
-					article.setYear((int) year.getValue());
-				} catch (SQLException e1) {
-					Main.error(e1.getMessage());
-				}
+				article.setYear((int) year.getValue());
 
 			}
 		});
@@ -155,11 +143,8 @@ public class ArticleView extends JPanel {
 		doi.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				try {
-					article.setDOI(doi.getText());
-				} catch (SQLException e1) {
-					Main.error(e1.getMessage());
-				}
+				article.setDOI(doi.getText());
+
 			}
 		});
 		doi.setBackground(Color.WHITE);
@@ -170,11 +155,7 @@ public class ArticleView extends JPanel {
 		url.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				try {
-					article.setURL(url.getText());
-				} catch (SQLException e1) {
-					Main.error(e1.getMessage());
-				}
+				article.setURL(url.getText());
 			}
 		});
 		url.setBackground(Color.WHITE);
@@ -279,11 +260,7 @@ public class ArticleView extends JPanel {
 		Issn tmp = IssnModel.getIssnByName((String) issnName.getSelectedItem());
 		if (tmp != null) {
 			issnNum.setSelectedItem(tmp.getIssnString());
-			try {
-				article.setIssn(tmp);
-			} catch (SQLException e) {
-				Main.error(e.getMessage());
-			}
+			article.setIssn(tmp);
 		} else {
 			if (!adder) {
 				updateIssn();
@@ -306,11 +283,7 @@ public class ArticleView extends JPanel {
 		Issn tmp = IssnModel.getIssnByIssn((String) issnNum.getSelectedItem());
 		if (tmp != null) {
 			issnName.setSelectedItem(tmp.getName());
-			try {
-				article.setIssn(tmp);
-			} catch (SQLException e) {
-				Main.error(e.getMessage());
-			}
+			article.setIssn(tmp);
 		} else {
 			if (!adder) {
 				IssnAdder a = new IssnAdder((String) issnNum.getSelectedItem(), "", this);
@@ -368,11 +341,7 @@ public class ArticleView extends JPanel {
 	 *            - new issn
 	 */
 	public void updateIssn(Issn issn) {
-		try {
-			article.setIssn(issn);
-		} catch (SQLException e) {
-			Main.error(e.getMessage());
-		}
+		article.setIssn(issn);
 		updateIssn();
 	}
 

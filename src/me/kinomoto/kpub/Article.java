@@ -191,7 +191,7 @@ public class Article {
 	 * @return "Article", "Speech" or "Poster"
 	 */
 	public String getTypeString() {
-		if(type == null)
+		if (type == null)
 			return "";
 		String t = type.toString().toLowerCase();
 		return t.substring(0, 1).toUpperCase() + t.substring(1);
@@ -274,7 +274,7 @@ public class Article {
 	 * 
 	 * @throws SQLException
 	 */
-	public void setWorkType(String type) throws SQLException {
+	public void setWorkType(String type) {
 		setWorkType(WORK_TYPE.valueOf(type));
 	}
 
@@ -283,14 +283,23 @@ public class Article {
 	 * 
 	 * @throws SQLException
 	 */
-	public void setWorkType(WORK_TYPE type) throws SQLException {
+	public void setWorkType(final WORK_TYPE type) {
 		if (type != this.type) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Type = ? WHERE ArticleID = " + articleID);
-			st.setString(1, type.toString());
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Type = ? WHERE ArticleID = " + articleID);
+						st.setString(1, type.toString());
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.type = type;
 		}
 	}
@@ -300,14 +309,23 @@ public class Article {
 	 * 
 	 * @throws SQLException
 	 */
-	public void setName(String name) throws SQLException {
+	public void setName(final String name) {
 		if (this.name != name) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Name = ? WHERE ArticleId = " + articleID);
-			st.setString(1, name);
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Name = ? WHERE ArticleId = " + articleID);
+						st.setString(1, name);
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.name = name;
 		}
 	}
@@ -317,14 +335,23 @@ public class Article {
 	 * 
 	 * @throws SQLException
 	 */
-	public void setAuthorsFromUnit(String authors) throws SQLException {
+	public void setAuthorsFromUnit(final String authors) {
 		if (getAuthorsFromUnitString() != authors) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET AuthorsFromUnit = ? WHERE ArticleId = " + articleID);
-			st.setString(1, authors);
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET AuthorsFromUnit = ? WHERE ArticleId = " + articleID);
+						st.setString(1, authors);
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.authorsFromUnit = Author.getAuthors(authors);
 		}
 	}
@@ -334,16 +361,28 @@ public class Article {
 	 * 
 	 * @throws SQLException
 	 */
-	public void setAuthorsNotFromUnit(String authors) throws SQLException {
+	public void setAuthorsNotFromUnit(final String authors) {
 		if (getAuthorsNotFromUnitString() != authors) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET AuthorsNotFromUnit = ? WHERE ArticleId = " + articleID);
-			st.setString(1, authors);
-			st.execute();
-			st.close();
-			Connection.closeConnection();
-			this.authorsNotFromUnit = Author.getAuthors(authors);
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET AuthorsNotFromUnit = ? WHERE ArticleId = " + articleID);
+						st.setString(1, authors);
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+
+				}
+			});
+
+			Article.this.authorsNotFromUnit = Author.getAuthors(authors);
 		}
+
 	}
 
 	/**
@@ -351,15 +390,24 @@ public class Article {
 	 * 
 	 * @throws SQLException
 	 */
-	public void setAuthorsCount(int count) throws SQLException {
+	public void setAuthorsCount(final int count) {
 		if (this.authorsNotFromUnitCount != count) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET AuthorsNotFromUnitCount = ? WHERE ArticleId = " + articleID);
-			st.setInt(1, count);
-			st.execute();
-			st.close();
-			Connection.closeConnection();
-			this.authorsNotFromUnitCount = count;
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET AuthorsNotFromUnitCount = ? WHERE ArticleId = " + articleID);
+						st.setInt(1, count);
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
+			authorsNotFromUnitCount = count;
 		}
 	}
 
@@ -368,17 +416,26 @@ public class Article {
 	 * 
 	 * @throws SQLException
 	 */
-	public void setLang(Lang lang) throws SQLException {
+	public void setLang(final Lang lang) {
 		if (this.lang != lang) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET LangID = ? WHERE ArticleId = " + articleID);
-			if (lang == null)
-				st.setInt(1, 0);
-			else
-				st.setInt(1, lang.getLangID());
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET LangID = ? WHERE ArticleId = " + articleID);
+						if (lang == null)
+							st.setInt(1, 0);
+						else
+							st.setInt(1, lang.getLangID());
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.lang = lang;
 		}
 	}
@@ -398,7 +455,8 @@ public class Article {
 			return year;
 		else {
 
-			if(date == null || date.isEmpty()) return 0;
+			if (date == null || date.isEmpty())
+				return 0;
 			Matcher m = Pattern.compile("[1-2][0-9][0-9][0-9]").matcher(date);
 			if (m.find()) {
 				return Integer.valueOf(date.substring(m.start(), m.end()));
@@ -438,32 +496,53 @@ public class Article {
 
 	/**
 	 * Update database and {@link #year}
+	 * 
 	 * @throws SQLException
 	 */
-	public void setYear(int year) throws SQLException {
+	public void setYear(final int year) {
 		if (this.year != year) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Year = ? WHERE ArticleId = " + articleID);
-			st.setInt(1, year);
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Year = ? WHERE ArticleId = " + articleID);
+						st.setInt(1, year);
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.year = year;
 		}
 
 	}
-	 /**
-	  * Update database and {@link #issue}
-	  * @throws SQLException
-	  */
-	public void setIssue(int issue) throws SQLException {
+
+	/**
+	 * Update database and {@link #issue}
+	 * 
+	 * @throws SQLException
+	 */
+	public void setIssue(final int issue) {
 		if (this.issue != issue) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Issue = ? WHERE ArticleId = " + articleID);
-			st.setInt(1, issue);
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Issue = ? WHERE ArticleId = " + articleID);
+						st.setInt(1, issue);
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.issue = issue;
 		}
 
@@ -471,67 +550,107 @@ public class Article {
 
 	/**
 	 * Updata database and {@link #articleNo}
+	 * 
 	 * @param articleNo
 	 * @throws SQLException
 	 */
-	public void setArticleNo(String articleNo) throws SQLException {
+	public void setArticleNo(final String articleNo) {
 		if (this.name != articleNo) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET ArticleNo = ? WHERE ArticleId = " + articleID);
-			st.setString(1, articleNo);
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET ArticleNo = ? WHERE ArticleId = " + articleID);
+						st.setString(1, articleNo);
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.articleNo = articleNo;
 		}
 	}
 
 	/**
 	 * Update database and {@link #doi}
+	 * 
 	 * @throws SQLException
 	 */
-	public void setDOI(String doi) throws SQLException {
+	public void setDOI(final String doi) {
 		if (this.name != doi) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET DOI = ? WHERE ArticleId = " + articleID);
-			st.setString(1, doi);
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET DOI = ? WHERE ArticleId = " + articleID);
+						st.setString(1, doi);
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.doi = doi;
 		}
 	}
 
 	/**
 	 * Update database and {@link #url}
+	 * 
 	 * @param url
 	 * @throws SQLException
 	 */
-	public void setURL(String url) throws SQLException {
+	public void setURL(final String url) {
 		if (this.name != url) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Url = ? WHERE ArticleId = " + articleID);
-			st.setString(1, url);
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Url = ? WHERE ArticleId = " + articleID);
+						st.setString(1, url);
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.url = url;
 		}
 	}
 
 	/**
 	 * Update database and {@link #issn}
+	 * 
 	 * @param issn
 	 * @throws SQLException
 	 */
-	public void setIssn(Issn issn) throws SQLException {
+	public void setIssn(final Issn issn) {
 		if (this.issn != issn) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET ISSN = ? WHERE ArticleId = " + articleID);
-			st.setInt(1, issn.getIssn7());
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET ISSN = ? WHERE ArticleId = " + articleID);
+						st.setInt(1, issn.getIssn7());
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.issn = issn;
 		}
 	}
@@ -545,17 +664,27 @@ public class Article {
 
 	/**
 	 * Update database and {@link #conferenceName}
+	 * 
 	 * @param conferenceName
 	 * @throws SQLException
 	 */
-	public void setConferenceName(String conferenceName) throws SQLException {
+	public void setConferenceName(final String conferenceName) {
 		if (this.conferenceName != conferenceName) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET ConferenceName = ? WHERE ArticleId = " + articleID);
-			st.setString(1, conferenceName);
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET ConferenceName = ? WHERE ArticleId = " + articleID);
+						st.setString(1, conferenceName);
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.conferenceName = conferenceName;
 		}
 	}
@@ -569,17 +698,27 @@ public class Article {
 
 	/**
 	 * Update database and {@link #date}
+	 * 
 	 * @param date
 	 * @throws SQLException
 	 */
-	public void setDate(String date) throws SQLException {
+	public void setDate(final String date) {
 		if (this.date != date) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Date = ? WHERE ArticleId = " + articleID);
-			st.setString(1, date);
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Date = ? WHERE ArticleId = " + articleID);
+						st.setString(1, date);
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.date = date;
 		}
 	}
@@ -593,16 +732,26 @@ public class Article {
 
 	/**
 	 * Update database and {@link #town}
+	 * 
 	 * @throws SQLException
 	 */
-	public void setTown(String town) throws SQLException {
+	public void setTown(final String town) {
 		if (this.town != town) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Town = ? WHERE ArticleId = " + articleID);
-			st.setString(1, town);
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Town = ? WHERE ArticleId = " + articleID);
+						st.setString(1, town);
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.town = town;
 		}
 	}
@@ -616,17 +765,27 @@ public class Article {
 
 	/**
 	 * Update database and {@link #country}
+	 * 
 	 * @param country
 	 * @throws SQLException
 	 */
-	public void setCountry(String country) throws SQLException {
+	public void setCountry(final String country) {
 		if (this.country != country) {
-			Connection.makeConnection();
-			PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Country = ? WHERE ArticleId = " + articleID);
-			st.setString(1, country);
-			st.execute();
-			st.close();
-			Connection.closeConnection();
+			Main.es.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Connection.makeConnection();
+						PreparedStatement st = Connection.prepareStatement("UPDATE Article SET Country = ? WHERE ArticleId = " + articleID);
+						st.setString(1, country);
+						st.execute();
+						st.close();
+						Connection.closeConnection();
+					} catch (SQLException e) {
+						Main.conError(e.getMessage());
+					}
+				}
+			});
 			this.country = country;
 		}
 	}
@@ -692,7 +851,7 @@ public class Article {
 	public int getAuthorsNotFromUnitCountNonCalc() {
 		return authorsNotFromUnitCount;
 	}
-	
+
 	@Override
 	public String toString() {
 		return getName();
