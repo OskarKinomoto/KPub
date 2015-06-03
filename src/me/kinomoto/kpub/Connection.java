@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.prefs.Preferences;
 
 /**
  * Makes connections with database
@@ -21,24 +22,29 @@ public class Connection {
 	private static int openConnections = 0;
 
 	/**
-	 * Database user name
+	 * Database default user name
 	 */
 	private static final String DB_USER = "jdbc";
 
 	/**
-	 * Database user password
+	 * Database default user password
 	 */
 	private static final String DB_PASS = "jdbc";
 
 	/**
-	 * Database name
+	 * Database default name
 	 */
 	private static final String DB_NAME = "jdbc";
 
 	/**
-	 * Database host location
+	 * Database default host location
 	 */
-	private static final String DB_HOST = "localhost";
+	private static final String DB_HOST = "localihost";
+
+	/**
+	 * Store credentials at pc preferences
+	 */
+	private static Preferences prefs = Preferences.userNodeForPackage(Connection.class);
 
 	private Connection() {
 	}
@@ -51,7 +57,7 @@ public class Connection {
 	public static void makeConnection() throws SQLException {
 		openConnections++;
 		if (openConnections == 1)
-			connection = DriverManager.getConnection("jdbc:mysql://" + DB_HOST + "/" + DB_NAME, DB_USER, DB_PASS);
+			connection = DriverManager.getConnection("jdbc:mysql://" + getHost() + "/" + getDB(), getName(), getPass());
 	}
 
 	/**
@@ -81,6 +87,10 @@ public class Connection {
 	 * Decrement {@link #openConnections} and/or close {@link #connection}
 	 */
 	public static void closeConnection() {
+		if (connection == null) {
+			openConnections = 0;
+			return;
+		}
 		if (openConnections > 0)
 			openConnections--;
 		if (openConnections == 0) {
@@ -93,4 +103,57 @@ public class Connection {
 			}
 		}
 	}
+
+	public static boolean testConnection() {
+		try {
+			makeConnection();
+			return true;
+		} catch (SQLException e) {
+			return false;
+		} finally {
+			closeConnection();
+		}
+	}
+
+	public static String getHost() {
+		return prefs.get("DB_HOST", DB_HOST);
+	}
+
+	public static void setHost(String host) {
+		prefs.put("DB_HOST", host);
+	}
+
+	public static String getName() {
+		return prefs.get("USER_NAME", DB_USER);
+	}
+
+	public static void setName(String name) {
+		prefs.put("USER_NAME", name);
+	}
+
+	public static String getPass() {
+		return prefs.get("USER_PASS", DB_PASS);
+	}
+
+	public static void setPass(String pass) {
+		prefs.put("USER_PASS", pass);
+	}
+
+	public static String getDB() {
+		return prefs.get("DB_NAME", DB_NAME);
+	}
+
+	public static void setDB(String db) {
+		prefs.put("DB_NAME", db);
+	}
+
+	public static void restart() {
+		try {
+			if (connection != null)
+				connection.close();
+		} catch (SQLException e) {
+		}
+		openConnections = 0;
+	}
+
 }

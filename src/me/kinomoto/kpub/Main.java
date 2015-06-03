@@ -115,7 +115,7 @@ public class Main extends JFrame {
 		JPanel toolBar = new JPanel();
 		northContainer.add(toolBar, "1, 2, fill, fill");
 		toolBar.setLayout(new FormLayout(new ColumnSpec[] { FormFactory.DEFAULT_COLSPEC, FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC, FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC, FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC, FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC, }, new RowSpec[] { FormFactory.DEFAULT_ROWSPEC, }));
+				FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC, FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,  FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC, }, new RowSpec[] { FormFactory.DEFAULT_ROWSPEC, }));
 
 		JButton btnNewArticle = new JButton("New article");
 		toolBar.add(btnNewArticle, "1, 1, left, top");
@@ -153,6 +153,15 @@ public class Main extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				OutputFormatEditor.showEditor();
+			}
+		});
+		
+		JButton credEditor = new JButton("Cred");
+		toolBar.add(credEditor, "13, 1");
+		credEditor.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CredentialsEditor.showDialog(true);
 			}
 		});
 	}
@@ -272,8 +281,24 @@ public class Main extends JFrame {
 	 * Starts application and makes {@link Main#Main() Main()}.
 	 */
 	public static void main(String[] args) {
+		startApp();
+	}
+	
+	public static void startApp() {
+		//check connection
+		while(!Connection.testConnection())
+			if(ConnectionErrorDialog.showDialog())
+				CredentialsEditor.showDialog(false);
+			
 		@SuppressWarnings("unused")
 		Main frame = new Main();
+		
+	}
+	
+	public static void restartApp() {
+		mainRef.dispose();
+		Connection.restart();
+		startApp();
 	}
 
 	private class NewArticleAction extends AbstractAction {
