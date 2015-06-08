@@ -1,6 +1,7 @@
 package me.kinomoto.kpub;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -10,7 +11,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
+import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -41,7 +42,6 @@ public class ConnectionErrorDialog extends JDialog {
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				// TODO Auto-generated method stub
 				System.exit(0);
 			}
 		});
@@ -54,8 +54,12 @@ public class ConnectionErrorDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new FormLayout(new ColumnSpec[] { FormFactory.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), }, new RowSpec[] { FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("min:grow"), }));
 
-		JFormattedTextField formattedTextField = new JFormattedTextField();
-		contentPanel.add(formattedTextField, "2, 2, fill, fill");
+		JEditorPane message = new JEditorPane("text/html", "");
+		message.setText("<center><h2>Can't connect to database</h2>\nTry again or change credentials");
+		message.setEditable(false);
+		message.setBackground(new Color(0, true));
+		contentPanel.add(message, "2, 2, fill, fill");
+		
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
